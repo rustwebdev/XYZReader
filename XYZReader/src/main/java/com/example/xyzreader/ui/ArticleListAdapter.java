@@ -10,19 +10,19 @@ import android.support.v7.graphics.Palette;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
-import com.example.xyzreader.data.ItemsContract;
 import com.example.xyzreader.utils.ArticleDateUtils;
+import com.example.xyzreader.utils.Constants;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
-import java.text.ParseException;
 import java.util.Date;
+
+import static com.example.xyzreader.utils.ArticleDateUtils.parsePublishedDate;
 
 public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.ViewHolder> {
   private static final String LOG_TAG = ArticleListAdapter.class.getSimpleName();
@@ -44,28 +44,20 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
     final ViewHolder vh = new ViewHolder(view);
     view.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View view) {
-        context.startActivity(new Intent(Intent.ACTION_VIEW,
-            ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition()))));
+        Intent intent = new Intent(context, ArticleDetailActivity.class);
+        //context.startActivity(new Intent(Intent.ACTION_VIEW,
+        //    ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition()))));
+        intent.putExtra(Constants.ARTICLE_POSITION, vh.getAdapterPosition());
+        context.startActivity(intent);
       }
     });
     return vh;
   }
 
-  private Date parsePublishedDate() {
-    try {
-      String date = mCursor.getString(ArticleLoader.Query.PUBLISHED_DATE);
-      return ArticleDateUtils.dateFormat.parse(date);
-    } catch (ParseException ex) {
-      Log.e(LOG_TAG, ex.getMessage());
-      Log.i(LOG_TAG, "passing today's date");
-      return new Date();
-    }
-  }
-
   @Override public void onBindViewHolder(final ViewHolder holder, int position) {
     mCursor.moveToPosition(position);
     holder.titleView.setText(mCursor.getString(ArticleLoader.Query.TITLE));
-    Date publishedDate = parsePublishedDate();
+    Date publishedDate = parsePublishedDate(mCursor, LOG_TAG);
     if (!publishedDate.before(ArticleDateUtils.START_OF_EPOCH.getTime())) {
 
       holder.subtitleView.setText(Html.fromHtml(
