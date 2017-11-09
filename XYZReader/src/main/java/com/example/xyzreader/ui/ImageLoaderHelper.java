@@ -41,4 +41,6 @@ public class ImageLoaderHelper {
     public ImageLoader getImageLoader() {
         return mImageLoader;
     }
+
+
 }

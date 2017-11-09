@@ -10,10 +10,9 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
-import android.widget.FrameLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.example.xyzreader.R;
@@ -31,9 +30,8 @@ public class ArticleListActivity extends AppCompatActivity
 
   private static final String LOG_TAG = ArticleListActivity.class.toString();
   private boolean mIsRefreshing = false;
-
-  @BindView(R.id.toolbar) Toolbar mToolbar;
-  @BindView(R.id.toolbar_container) FrameLayout mToolbarContainerView;
+  private GridItemDecoration mDividerItemDecoration;
+  @BindView(R.id.main_toolbar) Toolbar mToolbar;
   @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout mSwipeRefreshLayout;
   @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
 
@@ -41,8 +39,12 @@ public class ArticleListActivity extends AppCompatActivity
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_article_list);
     ButterKnife.bind(this);
+    setSupportActionBar(mToolbar);
+    getSupportActionBar().setLogo(R.drawable.logo);
+    getSupportActionBar().setTitle("");
 
     getLoaderManager().initLoader(0, null, this);
+    mDividerItemDecoration = new GridItemDecoration(2, 4, false);
 
     if (savedInstanceState == null) {
       refresh();
@@ -86,14 +88,12 @@ public class ArticleListActivity extends AppCompatActivity
     adapter.setHasStableIds(true);
     mRecyclerView.setAdapter(adapter);
     int columnCount = getResources().getInteger(R.integer.list_column_count);
-    StaggeredGridLayoutManager sglm =
-        new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
+    GridLayoutManager sglm = new GridLayoutManager(this, columnCount);
     mRecyclerView.setLayoutManager(sglm);
+    mRecyclerView.addItemDecoration(mDividerItemDecoration);
   }
 
   @Override public void onLoaderReset(Loader<Cursor> loader) {
     mRecyclerView.setAdapter(null);
   }
-
-
 }
