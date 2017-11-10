@@ -1,10 +1,12 @@
 package com.example.xyzreader.ui;
 
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.RecyclerView;
@@ -45,10 +47,15 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
     view.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View view) {
         Intent intent = new Intent(context, ArticleDetailActivity.class);
-        //context.startActivity(new Intent(Intent.ACTION_VIEW,
-        //    ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition()))));
-        intent.putExtra(Constants.ARTICLE_POSITION, vh.getAdapterPosition());
-        context.startActivity(intent);
+        //Debug.startMethodTracing("sample");
+        mCursor.moveToPosition(vh.getAdapterPosition());
+        Bundle bundle = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+          bundle = ActivityOptions.makeSceneTransitionAnimation((ArticleListActivity)context,vh.thumbnailView,vh.thumbnailView.getTransitionName()).toBundle();
+        }
+        intent.putExtra(Constants.ARTICLE_POSITION,mCursor.getInt(ArticleLoader.Query._ID));
+        intent.putExtra(Constants.ADAPTER_PALETTE_COLOR, vh.color);
+        context.startActivity(intent, bundle);
       }
     });
     return vh;
@@ -89,6 +96,7 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
               swatch = palette.getMutedSwatch();
             }
             holder.linearLayout.setBackgroundColor(swatch.getRgb());
+            holder.color = swatch.getRgb();
           }
         });
       }
@@ -116,6 +124,7 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
     TextView titleView;
     TextView subtitleView;
     ConstraintLayout linearLayout;
+    int color;
 
     ViewHolder(View view) {
       super(view);
@@ -123,6 +132,7 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
       titleView = (TextView) view.findViewById(R.id.article_title);
       subtitleView = (TextView) view.findViewById(R.id.article_subtitle);
       linearLayout = (ConstraintLayout) view.findViewById(R.id.grid_item_layout);
+
     }
   }
 

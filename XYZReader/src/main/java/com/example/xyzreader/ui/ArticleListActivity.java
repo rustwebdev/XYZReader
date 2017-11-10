@@ -18,6 +18,7 @@ import butterknife.ButterKnife;
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
 import com.example.xyzreader.data.UpdaterService;
+import com.facebook.stetho.Stetho;
 
 /**
  * An activity representing a list of Articles. This activity has different presentations for
@@ -45,7 +46,7 @@ public class ArticleListActivity extends AppCompatActivity
 
     getLoaderManager().initLoader(0, null, this);
     mDividerItemDecoration = new GridItemDecoration(2, 4, false);
-
+    Stetho.initializeWithDefaults(this);
     if (savedInstanceState == null) {
       refresh();
     }

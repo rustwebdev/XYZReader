@@ -7,5 +7,6 @@
   <color name="theme_accent">#9E9E9E</color>
   <color name="ltgray">#ffe0e0e0</color>
   <color name="white">#fff</color>
+  <color name="black">#000000</color>
 
 </resources>
