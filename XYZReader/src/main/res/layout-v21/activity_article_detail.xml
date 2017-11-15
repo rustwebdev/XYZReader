@@ -98,7 +98,7 @@
         android:paddingEnd="@dimen/content_tv_padding_end"
         android:paddingStart="@dimen/content_tv_padding_start"
         android:paddingTop="@dimen/content_tv_padding_top"
-        android:textColor="#de000000"
+        android:textColor="@color/light_black"
         android:textSize="14sp"
         />
 
