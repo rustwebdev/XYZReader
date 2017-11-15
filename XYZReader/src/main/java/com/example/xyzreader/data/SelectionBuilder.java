@@ -36,7 +36,7 @@ import android.text.TextUtils;
  * appended clause is combined using {@code AND}. This class is <em>not</em>
  * thread safe.
  */
-public class SelectionBuilder {
+@SuppressWarnings("ALL") public class SelectionBuilder {
     private String mTable = null;
     private HashMap<String, String> mProjectionMap;
     private StringBuilder mSelection;

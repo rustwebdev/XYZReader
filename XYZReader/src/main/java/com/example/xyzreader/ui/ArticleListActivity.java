@@ -18,7 +18,6 @@ import butterknife.ButterKnife;
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
 import com.example.xyzreader.data.UpdaterService;
-import com.facebook.stetho.Stetho;
 
 /**
  * An activity representing a list of Articles. This activity has different presentations for
@@ -41,12 +40,12 @@ public class ArticleListActivity extends AppCompatActivity
     setContentView(R.layout.activity_article_list);
     ButterKnife.bind(this);
     setSupportActionBar(mToolbar);
+    //noinspection ConstantConditions
     getSupportActionBar().setLogo(R.drawable.logo);
     getSupportActionBar().setTitle("");
 
     getLoaderManager().initLoader(0, null, this);
-    mDividerItemDecoration = new GridItemDecoration(2, 4, false);
-    Stetho.initializeWithDefaults(this);
+    mDividerItemDecoration = new GridItemDecoration(2, 2, false);
     if (savedInstanceState == null) {
       refresh();
     }

@@ -3,14 +3,15 @@ package com.example.xyzreader.ui;
 import android.app.LoaderManager;
 import android.content.Loader;
 import android.database.Cursor;
+import android.graphics.drawable.AnimatedVectorDrawable;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Debug;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v13.view.ViewCompat;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -19,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
 import com.example.xyzreader.utils.Constants;
@@ -34,6 +36,8 @@ public class ArticleDetailActivity extends AppCompatActivity
   Cursor mCursor;
   String title;
   String bodyContent;
+  boolean isPlaying = false;
+  MediaPlayer mediaPlayer;
 
   @BindView(R.id.detail_toolbar) CustomToolbar toolbar;
   @BindView(R.id.ctl_img) ImageView ctlImage;
@@ -43,6 +47,29 @@ public class ArticleDetailActivity extends AppCompatActivity
   @BindView(R.id.toolbar_author_text_view) TextView toolbarAuthorTextView;
   @BindView(R.id.app_bar_layout) AppBarLayout appBarLayout;
   @BindView(R.id.header_ll) LinearLayout headerLl;
+  @BindView(R.id.floatingActionButton) FloatingActionButton fab;
+
+  @OnClick(R.id.floatingActionButton) public void fabClick() {
+    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+      if (!isPlaying) {
+        AnimatedVectorDrawable playToPause =
+            (AnimatedVectorDrawable) getDrawable(R.drawable.avd_play_to_pause);
+        fab.setImageDrawable(playToPause);
+        assert playToPause != null;
+        playToPause.start();
+        isPlaying ^= true;
+        mediaPlayer.start();
+      } else {
+        AnimatedVectorDrawable pauseToPlay =
+            (AnimatedVectorDrawable) getDrawable(R.drawable.avd_pause_to_play_animation);
+        fab.setImageDrawable(pauseToPlay);
+        assert pauseToPlay != null;
+        pauseToPlay.start();
+        isPlaying ^= true;
+        mediaPlayer.pause();
+      }
+    }
+  }
 
   @Override protected void onCreate(Bundle savedInstanceState) {
 
@@ -50,8 +77,8 @@ public class ArticleDetailActivity extends AppCompatActivity
     setContentView(R.layout.activity_article_detail);
     ButterKnife.bind(this);
     getLoaderManager().initLoader(1, null, this);
-    Log.d(LOG_TAG, String.valueOf(getIntent().getIntExtra(Constants.ARTICLE_POSITION, 0)));
     setSupportActionBar(toolbar);
+    //noinspection ConstantConditions
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       Window window = getWindow();
@@ -59,8 +86,9 @@ public class ArticleDetailActivity extends AppCompatActivity
       window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
       window.setStatusBarColor(getIntent().getIntExtra(Constants.ADAPTER_PALETTE_COLOR, 0));
     }
-    toolbar.setTitleTextColor(getResources().getColor(R.color.white));
 
+    mediaPlayer = MediaPlayer.create(this, R.raw.scarlet_plague);
+    toolbar.setTitleTextColor(getResources().getColor(R.color.white));
     appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
       boolean isShow = true;
       int scrollRange = -1;
@@ -91,7 +119,6 @@ public class ArticleDetailActivity extends AppCompatActivity
         }
       }
     });
-    Debug.stopMethodTracing();
   }
 
   @Override public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
@@ -105,13 +132,9 @@ public class ArticleDetailActivity extends AppCompatActivity
       toolbarTextView.setText(cursor.getString(ArticleLoader.Query.TITLE));
       toolbarAuthorTextView.setText(cursor.getString(ArticleLoader.Query.AUTHOR));
       title = cursor.getString(ArticleLoader.Query.TITLE);
-
       Picasso.with(this).load(cursor.getString(ArticleLoader.Query.PHOTO_URL)).into(ctlImage);
-      //contentTextView.setText(cursor.getString(ArticleLoader.Query.BODY));
       bodyContent = cursor.getString(ArticleLoader.Query.BODY);
       contentTextView.setText(bodyContent.substring(0, 4000));
-
-
     }
   }
 
@@ -119,4 +142,10 @@ public class ArticleDetailActivity extends AppCompatActivity
 
   }
 
+  @Override protected void onPause() {
+    super.onPause();
+    if (mediaPlayer.isPlaying()) {
+      mediaPlayer.stop();
+    }
+  }
 }

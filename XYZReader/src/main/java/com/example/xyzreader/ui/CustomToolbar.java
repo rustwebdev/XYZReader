@@ -114,14 +114,13 @@ public class CustomToolbar extends Toolbar {
           int drawablesCount = ((ActionMenuItemView) innerView).getCompoundDrawables().length;
           for (int k = 0; k < drawablesCount; k++) {
             if (((ActionMenuItemView) innerView).getCompoundDrawables()[k] != null) {
-              final int finalK = k;
 
               //Important to set the color filter in seperate thread,
               //by adding it to the message queue
               //Won't work otherwise.
               //Works fine for my case but needs more testing
 
-              ((ActionMenuItemView) innerView).getCompoundDrawables()[finalK].setColorFilter(
+              ((ActionMenuItemView) innerView).getCompoundDrawables()[k].setColorFilter(
                   colorFilter);
 
               //                              innerView.post(new Runnable() {

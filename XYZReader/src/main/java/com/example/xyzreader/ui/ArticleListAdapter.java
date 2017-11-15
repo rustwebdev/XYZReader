@@ -47,13 +47,13 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
     view.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View view) {
         Intent intent = new Intent(context, ArticleDetailActivity.class);
-        //Debug.startMethodTracing("sample");
         mCursor.moveToPosition(vh.getAdapterPosition());
         Bundle bundle = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-          bundle = ActivityOptions.makeSceneTransitionAnimation((ArticleListActivity)context,vh.thumbnailView,vh.thumbnailView.getTransitionName()).toBundle();
+          bundle = ActivityOptions.makeSceneTransitionAnimation((ArticleListActivity) context,
+              vh.thumbnailView, vh.thumbnailView.getTransitionName()).toBundle();
         }
-        intent.putExtra(Constants.ARTICLE_POSITION,mCursor.getInt(ArticleLoader.Query._ID));
+        intent.putExtra(Constants.ARTICLE_POSITION, mCursor.getInt(ArticleLoader.Query._ID));
         intent.putExtra(Constants.ADAPTER_PALETTE_COLOR, vh.color);
         context.startActivity(intent, bundle);
       }
@@ -128,14 +128,12 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
 
     ViewHolder(View view) {
       super(view);
-      thumbnailView = (DynamicHeightNetworkImageView) view.findViewById(R.id.thumbnail);
-      titleView = (TextView) view.findViewById(R.id.article_title);
-      subtitleView = (TextView) view.findViewById(R.id.article_subtitle);
-      linearLayout = (ConstraintLayout) view.findViewById(R.id.grid_item_layout);
-
+      thumbnailView = view.findViewById(R.id.thumbnail);
+      titleView = view.findViewById(R.id.article_title);
+      subtitleView = view.findViewById(R.id.article_subtitle);
+      linearLayout = view.findViewById(R.id.grid_item_layout);
     }
   }
-
 }
 
 

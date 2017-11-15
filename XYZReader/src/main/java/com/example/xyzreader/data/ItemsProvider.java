@@ -15,7 +15,7 @@ import android.net.Uri;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemsProvider extends ContentProvider {
+@SuppressWarnings("ConstantConditions") public class ItemsProvider extends ContentProvider {
 	private SQLiteOpenHelper mOpenHelper;
 
 	interface Tables {
@@ -54,13 +54,14 @@ public class ItemsProvider extends ContentProvider {
 		}
 	}
 
-	@Override
+	@SuppressWarnings("ConstantConditions") @Override
 	public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
 		final SQLiteDatabase db = mOpenHelper.getReadableDatabase();
 		final SelectionBuilder builder = buildSelection(uri);
 		Cursor cursor = builder.where(selection, selectionArgs).query(db, projection, sortOrder);
         if (cursor != null) {
-            cursor.setNotificationUri(getContext().getContentResolver(), uri);
+					//noinspection ConstantConditions
+					cursor.setNotificationUri(getContext().getContentResolver(), uri);
         }
         return cursor;
 	}
@@ -72,7 +73,8 @@ public class ItemsProvider extends ContentProvider {
 		switch (match) {
 			case ITEMS: {
 				final long _id = db.insertOrThrow(Tables.ITEMS, null, values);
-                getContext().getContentResolver().notifyChange(uri, null);
+				//noinspection ConstantConditions
+				getContext().getContentResolver().notifyChange(uri, null);
 				return ItemsContract.Items.buildItemUri(_id);
 			}
 			default: {
@@ -85,7 +87,8 @@ public class ItemsProvider extends ContentProvider {
 	public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
 		final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
 		final SelectionBuilder builder = buildSelection(uri);
-        getContext().getContentResolver().notifyChange(uri, null);
+		//noinspection ConstantConditions
+		getContext().getContentResolver().notifyChange(uri, null);
 		return builder.where(selection, selectionArgs).update(db, values);
 	}
 
@@ -93,7 +96,8 @@ public class ItemsProvider extends ContentProvider {
 	public int delete(Uri uri, String selection, String[] selectionArgs) {
 		final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
 		final SelectionBuilder builder = buildSelection(uri);
-        getContext().getContentResolver().notifyChange(uri, null);
+		//noinspection ConstantConditions
+		getContext().getContentResolver().notifyChange(uri, null);
 		return builder.where(selection, selectionArgs).delete(db);
 	}
 

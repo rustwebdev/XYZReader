@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
   <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
     <item name="colorPrimary">@color/theme_primary</item>
@@ -12,11 +12,5 @@
     <item name="colorPrimary">@color/white</item>
   </style>
 
-
-  <style name="ExpandedToolbar" parent="@android:style/TextAppearance.Medium">
-    <item name="android:textColor">@color/white</item>
-    <item name="android:textSize">26sp</item>
-
-  </style>
 
 </resources>

@@ -13,7 +13,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class RemoteEndpointUtil {
+@SuppressWarnings("ALL") public class RemoteEndpointUtil {
     private static final String TAG = "RemoteEndpointUtil";
 
     private RemoteEndpointUtil() {
