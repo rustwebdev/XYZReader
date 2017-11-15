@@ -2,6 +2,9 @@
 
   <dimen name="content_tv_padding_start">16dp</dimen>
   <dimen name="content_tv_padding_end">16dp</dimen>
+  <dimen name="content_tv_padding_top">16dp</dimen>
+  <dimen name="fab_margin">16dp</dimen>
+  <dimen name="activity_detail_frame_layout_layout_height">256dp</dimen>
   <integer name="list_column_count">2</integer>
 
 </resources>
