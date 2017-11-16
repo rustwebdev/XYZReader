@@ -100,6 +100,7 @@
         android:paddingTop="@dimen/content_tv_padding_top"
         android:textColor="@color/light_black"
         android:textSize="14sp"
+        android:linksClickable="true"
         />
 
   </android.support.v4.widget.NestedScrollView>
@@ -111,10 +112,6 @@
       android:layout_margin="@dimen/fab_margin"
       android:clickable="true"
       android:focusable="true"
-      app:backgroundTint="@color/theme_primary"
-      app:elevation="12dp"
-      app:fabSize="normal"
-      app:rippleColor="?attr/editTextColor"
       app:srcCompat="@drawable/play_icon"
       />
 </android.support.design.widget.CoordinatorLayout>

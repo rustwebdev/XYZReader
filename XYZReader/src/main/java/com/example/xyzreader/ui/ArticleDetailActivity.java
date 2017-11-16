@@ -12,6 +12,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -86,7 +87,6 @@ public class ArticleDetailActivity extends AppCompatActivity
       window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
       window.setStatusBarColor(getIntent().getIntExtra(Constants.ADAPTER_PALETTE_COLOR, 0));
     }
-
     mediaPlayer = MediaPlayer.create(this, R.raw.scarlet_plague);
     toolbar.setTitleTextColor(getResources().getColor(R.color.white));
     appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
@@ -133,8 +133,16 @@ public class ArticleDetailActivity extends AppCompatActivity
       toolbarAuthorTextView.setText(cursor.getString(ArticleLoader.Query.AUTHOR));
       title = cursor.getString(ArticleLoader.Query.TITLE);
       Picasso.with(this).load(cursor.getString(ArticleLoader.Query.PHOTO_URL)).into(ctlImage);
-      bodyContent = cursor.getString(ArticleLoader.Query.BODY);
-      contentTextView.setText(bodyContent.substring(0, 4000));
+      bodyContent = mCursor.getString(ArticleLoader.Query.BODY).replace("\r\n\r\n", "\n\n");
+      bodyContent = bodyContent.replace("\r\n", " ");
+      if (bodyContent.length() >= 4000) {
+        contentTextView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY)
+            .substring(0, 4000)));
+        ;
+      } else {
+        contentTextView.setText(Html.fromHtml(
+            mCursor.getString(ArticleLoader.Query.BODY)));
+      }
     }
   }
 

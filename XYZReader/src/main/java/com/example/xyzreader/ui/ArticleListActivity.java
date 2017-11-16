@@ -8,11 +8,14 @@ import android.content.IntentFilter;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.ProgressBar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.example.xyzreader.R;
@@ -34,6 +37,7 @@ public class ArticleListActivity extends AppCompatActivity
   @BindView(R.id.main_toolbar) Toolbar mToolbar;
   @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout mSwipeRefreshLayout;
   @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
+  @BindView(R.id.pb) ProgressBar pb;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -91,6 +95,23 @@ public class ArticleListActivity extends AppCompatActivity
     GridLayoutManager sglm = new GridLayoutManager(this, columnCount);
     mRecyclerView.setLayoutManager(sglm);
     mRecyclerView.addItemDecoration(mDividerItemDecoration);
+    showSnackbar(mSwipeRefreshLayout,"XYZ Reader is up to date!",Snackbar.LENGTH_SHORT);
+    pb.setVisibility(View.GONE);
+    mRecyclerView.setVisibility(View.VISIBLE);
+  }
+
+  public void showSnackbar(View view, String message, int duration) {
+    // Create snackbar
+    final Snackbar snackbar = Snackbar.make(view, message, duration);
+
+    // Set an action on it, and a handler
+    snackbar.setAction("DISMISS", new View.OnClickListener() {
+      @Override public void onClick(View v) {
+        snackbar.dismiss();
+      }
+    });
+
+    snackbar.show();
   }
 
   @Override public void onLoaderReset(Loader<Cursor> loader) {
