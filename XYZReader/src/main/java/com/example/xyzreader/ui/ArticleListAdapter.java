@@ -81,6 +81,8 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
     Picasso.with(context).load(mCursor.getString(ArticleLoader.Query.THUMB_URL)).into(new Target() {
       @Override public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
         assert holder.thumbnailView != null;
+        holder.thumbnailView.setAspectRatio(ArticleLoader.Query.ASPECT_RATIO);
+
         holder.thumbnailView.setImageBitmap(bitmap);
         Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
           @Override public void onGenerated(Palette palette) {
@@ -111,8 +113,9 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
     });
     holder.thumbnailView.setImageUrl(mCursor.getString(ArticleLoader.Query.THUMB_URL),
         ImageLoaderHelper.getInstance(context).getImageLoader());
-
-    holder.thumbnailView.setAspectRatio(mCursor.getFloat(ArticleLoader.Query.ASPECT_RATIO));
+    //if(mCursor.getFloat(ArticleLoader.Query.THUMB_URL) != 0) {
+      holder.thumbnailView.setAspectRatio(mCursor.getFloat(ArticleLoader.Query.ASPECT_RATIO));
+    //}
   }
 
   @Override public int getItemCount() {
