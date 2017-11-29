@@ -4,11 +4,9 @@ import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
-import android.support.v7.graphics.Palette;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.format.DateUtils;
@@ -21,7 +19,6 @@ import com.example.xyzreader.data.ArticleLoader;
 import com.example.xyzreader.utils.ArticleDateUtils;
 import com.example.xyzreader.utils.Constants;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 import java.util.Date;
 
 import static com.example.xyzreader.utils.ArticleDateUtils.parsePublishedDate;
@@ -51,10 +48,9 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
         Bundle bundle = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
           bundle = ActivityOptions.makeSceneTransitionAnimation((ArticleListActivity) context,
-              vh.thumbnailView, vh.thumbnailView.getTransitionName()).toBundle();
+              vh.thumbnailView, context.getResources().getString(R.string.shared_img)).toBundle();
         }
         intent.putExtra(Constants.ARTICLE_POSITION, mCursor.getInt(ArticleLoader.Query._ID));
-        intent.putExtra(Constants.ADAPTER_PALETTE_COLOR, vh.color);
         context.startActivity(intent, bundle);
       }
     });
@@ -63,7 +59,11 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
 
   @Override public void onBindViewHolder(final ViewHolder holder, int position) {
     mCursor.moveToPosition(position);
+    holder.thumbnailView.setAspectRatio(mCursor.getFloat(ArticleLoader.Query.ASPECT_RATIO));
     holder.titleView.setText(mCursor.getString(ArticleLoader.Query.TITLE));
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      holder.thumbnailView.setTransitionName(context.getResources().getString(R.string.shared_img));
+    }
     Date publishedDate = parsePublishedDate(mCursor, LOG_TAG);
     if (!publishedDate.before(ArticleDateUtils.START_OF_EPOCH.getTime())) {
 
@@ -78,44 +78,11 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
 
               + mCursor.getString(ArticleLoader.Query.AUTHOR)));
     }
-    Picasso.with(context).load(mCursor.getString(ArticleLoader.Query.THUMB_URL)).into(new Target() {
-      @Override public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-        assert holder.thumbnailView != null;
-        holder.thumbnailView.setAspectRatio(ArticleLoader.Query.ASPECT_RATIO);
 
-        holder.thumbnailView.setImageBitmap(bitmap);
-        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-          @Override public void onGenerated(Palette palette) {
-            Palette.Swatch swatch =
-                new Palette.Swatch(context.getResources().getColor(R.color.white), 2);
-            if (palette.getLightVibrantSwatch() != null) {
-              swatch = palette.getLightVibrantSwatch();
-            } else if (palette.getVibrantSwatch() != null) {
-              swatch = palette.getVibrantSwatch();
-            } else if (palette.getDarkVibrantSwatch() != null) {
-              swatch = palette.getDarkVibrantSwatch();
-            } else if (palette.getMutedSwatch() != null) {
-              swatch = palette.getMutedSwatch();
-            }
-            holder.linearLayout.setBackgroundColor(swatch.getRgb());
-            holder.color = swatch.getRgb();
-          }
-        });
-      }
-
-      @Override public void onBitmapFailed(Drawable errorDrawable) {
-
-      }
-
-      @Override public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-      }
-    });
-    holder.thumbnailView.setImageUrl(mCursor.getString(ArticleLoader.Query.THUMB_URL),
-        ImageLoaderHelper.getInstance(context).getImageLoader());
-    //if(mCursor.getFloat(ArticleLoader.Query.THUMB_URL) != 0) {
-      holder.thumbnailView.setAspectRatio(mCursor.getFloat(ArticleLoader.Query.ASPECT_RATIO));
-    //}
+    Picasso.with(context)
+        .load(mCursor.getString(ArticleLoader.Query.THUMB_URL))
+        .placeholder(R.mipmap.ic_launcher)
+        .into(holder.thumbnailView);
   }
 
   @Override public int getItemCount() {

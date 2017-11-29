@@ -5,7 +5,6 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.drawable.AnimatedVectorDrawable;
 import android.media.MediaPlayer;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -14,8 +13,6 @@ import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -81,12 +78,7 @@ public class ArticleDetailActivity extends AppCompatActivity
     setSupportActionBar(toolbar);
     //noinspection ConstantConditions
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      Window window = getWindow();
-      window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-      window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-      window.setStatusBarColor(getIntent().getIntExtra(Constants.ADAPTER_PALETTE_COLOR, 0));
-    }
+
     mediaPlayer = MediaPlayer.create(this, R.raw.scarlet_plague);
     toolbar.setTitleTextColor(getResources().getColor(R.color.white));
     appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {

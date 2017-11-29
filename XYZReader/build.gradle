@@ -43,4 +43,8 @@ dependencies {
   annotationProcessor "com.jakewharton:butterknife-compiler:$butterknifeVersion"
   // SQLite Debugging
   compile 'com.facebook.stetho:stetho:1.5.0'
+  // ImageLoading
+  compile 'com.github.bumptech.glide:glide:4.3.1'
+  annotationProcessor 'com.github.bumptech.glide:compiler:4.3.1'
+
 }
